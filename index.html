@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BrotSMP</title>
+  <meta name="description" content="BrotSMP – Minecraft Survival Multiplayer Server">
+  <style>
+    :root {
+      --gold: #f5a623;
+      --gold-dark: #b86e00;
+      --stone: #c9c9c9;
+      --bg: #0b0b0d;
+      --panel: #16161a;
+      --text: #f2f2f2;
+      --muted: #9a9aa3;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      background: radial-gradient(circle at top, #1d1a14 0%, var(--bg) 60%);
+      color: var(--text);
+      min-height: 100vh;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 24px;
+      border-bottom: 2px solid var(--gold-dark);
+      background: rgba(0,0,0,0.6);
+      position: sticky;
+      top: 0;
+      backdrop-filter: blur(6px);
+    }
+    header img { height: 48px; }
+    nav a {
+      color: var(--text);
+      text-decoration: none;
+      margin-left: 18px;
+      font-weight: 600;
+    }
+    nav a:hover { color: var(--gold); }
+
+    .hero {
+      text-align: center;
+      padding: 60px 20px 40px;
+    }
+    .hero img {
+      width: min(420px, 80vw);
+      filter: drop-shadow(0 0 24px rgba(245,166,35,0.35));
+    }
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      margin: 20px 0 8px;
+      color: var(--gold);
+      letter-spacing: 1px;
+    }
+    .hero p { color: var(--muted); font-size: 1.1rem; margin: 0; }
+
+    .ip-box {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 28px;
+      background: var(--panel);
+      border: 2px solid var(--gold);
+      border-radius: 10px;
+      padding: 12px 20px;
+      font-family: ui-monospace, Consolas, monospace;
+      font-size: 1.2rem;
+    }
+    .ip-box button {
+      background: var(--gold);
+      color: #000;
+      border: none;
+      border-radius: 6px;
+      padding: 8px 14px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .ip-box button:hover { background: #ffc15c; }
+
+    main {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 20px;
+      display: grid;
+      gap: 20px;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    }
+    .card {
+      background: var(--panel);
+      border: 1px solid #2a2a31;
+      border-top: 3px solid var(--gold);
+      border-radius: 12px;
+      padding: 22px;
+    }
+    .card h2 { margin-top: 0; color: var(--gold); font-size: 1.3rem; }
+    .card p, .card li { color: var(--muted); line-height: 1.55; }
+    .card ul { padding-left: 18px; margin: 0; }
+
+    .btn {
+      display: inline-block;
+      margin-top: 10px;
+      background: linear-gradient(180deg, var(--gold), var(--gold-dark));
+      color: #000;
+      padding: 10px 18px;
+      border-radius: 8px;
+      font-weight: 700;
+      text-decoration: none;
+    }
+    .btn.secondary {
+      background: transparent;
+      color: var(--stone);
+      border: 2px solid var(--stone);
+    }
+
+    footer {
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.9rem;
+      padding: 40px 20px;
+      border-top: 1px solid #2a2a31;
+      margin-top: 40px;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <img src="logo.png" alt="BrotSMP Logo">
+    <nav>
+      <a href="#about">Über uns</a>
+      <a href="#join">Mitmachen</a>
+      <a href="#voice">Voice</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <img src="logo.png" alt="BrotSMP">
+    <h1>Willkommen auf BrotSMP</h1>
+    <p>Dein Survival-Abenteuer mit Freunden</p>
+    <div class="ip-box">
+      <span>Java: <strong id="ip-java">brotsmp1.minekeep.gg</strong></span>
+      <button onclick="copyIp('ip-java')">Kopieren</button>
+    </div>
+    <div class="ip-box">
+      <span>Bedrock: <strong id="ip-bedrock">brotsmp1.bedrock.minekeep.gg</strong></span>
+      <button onclick="copyIp('ip-bedrock')">Kopieren</button>
+    </div>
+  </section>
+
+  <main>
+    <div class="card" id="about">
+      <h2>Über uns</h2>
+      <p>BrotSMP ist ein Survival-Multiplayer-Server (SMP). Wir bauen gemeinsam, erkunden die Welt und haben Spaß zusammen.</p>
+      <p>Spielbar auf Java und Bedrock.</p>
+    </div>
+
+    <div class="card">
+      <h2>Features</h2>
+      <ul>
+        <li>Survival mit Fokus auf Community</li>
+        <li>Eigene Spawn- und Bauprojekte</li>
+        <li>Regelmäßige Events</li>
+      </ul>
+    </div>
+
+    <div class="card" id="join">
+      <h2>Mitmachen</h2>
+      <p>Verbinde dich mit der Server-Adresse oben und lies vor dem Start unsere Regeln.</p>
+      <a class="btn" href="#">Regeln lesen</a>
+    </div>
+
+    <div class="card" id="voice">
+      <h2>Voice-Chat</h2>
+      <p>Unser eigener Sprachchat für die Community. Anmeldung mit deinem Minecraft-Namen.</p>
+      <a class="btn secondary" href="#">Zum Voice-Chat</a>
+    </div>
+  </main>
+
+  <footer>
+    © BrotSMP · Alle Inhalte, inkl. Logo, sind urheberrechtlich geschützt.
+  </footer>
+
+  <script>
+    function copyIp(id) {
+      const ip = document.getElementById(id).textContent;
+      navigator.clipboard.writeText(ip).then(() => alert('Adresse kopiert: ' + ip));
+    }
+  </script>
+</body>
+</html>
