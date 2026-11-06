@@ -60,16 +60,18 @@
     .hero p { color: var(--muted); font-size: 1.1rem; margin: 0; }
 
     .ip-box {
-      display: inline-flex;
+      display: flex;
+      justify-content: space-between;
       align-items: center;
       gap: 12px;
-      margin-top: 28px;
+      margin: 14px auto 0;
+      max-width: 360px;
       background: var(--panel);
       border: 2px solid var(--gold);
       border-radius: 10px;
       padding: 12px 20px;
-      font-family: ui-monospace, Consolas, monospace;
       font-size: 1.2rem;
+      font-weight: 700;
     }
     .ip-box button {
       background: var(--gold);
@@ -143,12 +145,12 @@
     <h1>Willkommen auf BrotSMP</h1>
     <p>Dein Survival-Abenteuer mit Freunden</p>
     <div class="ip-box">
-      <span>Java: <strong id="ip-java">brotsmp1.minekeep.gg</strong></span>
-      <button onclick="copyIp('ip-java')">Kopieren</button>
+      <span>Java</span>
+      <button onclick="copyIp('brotsmp1.minekeep.gg', this)">Kopieren</button>
     </div>
     <div class="ip-box">
-      <span>Bedrock: <strong id="ip-bedrock">brotsmp1.bedrock.minekeep.gg</strong></span>
-      <button onclick="copyIp('ip-bedrock')">Kopieren</button>
+      <span>Bedrock</span>
+      <button onclick="copyIp('brotsmp1.bedrock.minekeep.gg', this)">Kopieren</button>
     </div>
   </section>
 
@@ -186,9 +188,12 @@
   </footer>
 
   <script>
-    function copyIp(id) {
-      const ip = document.getElementById(id).textContent;
-      navigator.clipboard.writeText(ip).then(() => alert('Adresse kopiert: ' + ip));
+    function copyIp(ip, btn) {
+      navigator.clipboard.writeText(ip).then(() => {
+        const old = btn.textContent;
+        btn.textContent = 'Kopiert!';
+        setTimeout(() => (btn.textContent = old), 1500);
+      });
     }
   </script>
 </body>
