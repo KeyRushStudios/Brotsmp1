@@ -31,6 +31,23 @@ const pool = mysql.createPool({
   ssl: DB_SSL === 'true' ? { rejectUnauthorized: true } : undefined,
 });
 
+// ---------- Schema automatisch anlegen ----------
+async function ensureSchema() {
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS users (
+      id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+      first_name VARCHAR(50) NOT NULL,
+      last_name VARCHAR(50) NULL,
+      mc_name VARCHAR(16) NOT NULL,
+      birth_date DATE NOT NULL,
+      password_hash VARCHAR(255) NOT NULL,
+      created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      UNIQUE KEY uq_mc_name (mc_name)
+    ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci
+  `);
+  console.log('Datenbank-Schema ist bereit');
+}
+
 // ---------- Hilfsfunktionen ----------
 const NAME_RE = /^[\p{L}][\p{L}\s'-]{0,49}$/u;
 const MC_RE = /^[A-Za-z0-9_]{3,16}$/;
@@ -149,4 +166,11 @@ app.get('/api/me', (req, res) => {
 
 app.use((_req, res) => res.status(404).json({ error: 'Nicht gefunden' }));
 
-app.listen(PORT, () => console.log(`BrotSMP-API läuft auf Port ${PORT}`));
+app.listen(PORT, async () => {
+  console.log(`BrotSMP-API läuft auf Port ${PORT}`);
+  try {
+    await ensureSchema();
+  } catch (err) {
+    console.error('Schema-Fehler beim Start:', err);
+  }
+});
