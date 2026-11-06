@@ -120,6 +120,43 @@
     }
 
     .discord-link { color: #8ea1ff !important; }
+    .status-section {
+      max-width: 600px;
+      margin: 20px auto 0;
+      padding: 0 20px;
+      text-align: center;
+    }
+    .status-section h2 { color: var(--gold); }
+    .status-card {
+      background: var(--panel);
+      border: 1px solid #2a2a31;
+      border-radius: 10px;
+      padding: 14px 18px;
+      margin-top: 12px;
+      text-align: left;
+    }
+    .status-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .badge {
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 999px;
+      color: #fff;
+      background: #6b6b75;
+    }
+    .badge.online { background: #22c55e; color: #000; }
+    .badge.offline { background: #ef4444; }
+    .motd {
+      color: var(--muted);
+      margin: 8px 0 0;
+      font-family: ui-monospace, Consolas, monospace;
+      white-space: pre-line;
+      word-break: break-word;
+    }
+
     .discord-cta {
       text-align: center;
       padding: 40px 20px;
@@ -201,6 +238,24 @@
     </div>
   </main>
 
+  <section class="status-section">
+    <h2>Serverstatus</h2>
+    <div class="status-card" id="status-java">
+      <div class="status-head">
+        <strong>Java</strong>
+        <span class="badge">Lade…</span>
+      </div>
+      <p class="motd">–</p>
+    </div>
+    <div class="status-card" id="status-bedrock">
+      <div class="status-head">
+        <strong>Bedrock</strong>
+        <span class="badge">Lade…</span>
+      </div>
+      <p class="motd">–</p>
+    </div>
+  </section>
+
   <section class="discord-cta">
     <h2>Join unserem Discord</h2>
     <p>Schreib mit der Community, bekomm Updates und finde Mitspieler.</p>
@@ -220,5 +275,34 @@
       });
     }
   </script>
+  <script>
+    async function loadStatus(edition, address, cardId) {
+      const card = document.getElementById(cardId);
+      const badge = card.querySelector('.badge');
+      const motdEl = card.querySelector('.motd');
+      const path = edition === 'bedrock' ? 'bedrock/3' : '3';
+      try {
+        const res = await fetch(`https://api.mcsrvstat.us/${path}/${address}`);
+        const data = await res.json();
+        if (data.online) {
+          badge.textContent = 'Online';
+          badge.className = 'badge online';
+          const lines = (data.motd && data.motd.clean) || [];
+          motdEl.textContent = lines.join('\n') || 'Keine MOTD verfügbar';
+        } else {
+          badge.textContent = 'Offline';
+          badge.className = 'badge offline';
+          motdEl.textContent = '–';
+        }
+      } catch {
+        badge.textContent = 'Offline';
+        badge.className = 'badge offline';
+        motdEl.textContent = 'Status konnte nicht geladen werden';
+      }
+    }
+    loadStatus('java', 'brotsmp1.minekeep.gg', 'status-java');
+    loadStatus('bedrock', 'brotsmp1.bedrock.minekeep.gg', 'status-bedrock');
+  </script>
 </body>
+
 </html>
