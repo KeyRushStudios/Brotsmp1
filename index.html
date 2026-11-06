@@ -190,7 +190,7 @@
     <nav>
       <a href="#about">Über uns</a>
       <a href="#join">Mitmachen</a>
-      <a href="#voice">Voice</a>
+      <a href="https://ts-brotsmp.duckdns.org" onclick="openVoice(event)">Voice</a>
       <a href="login.html">Anmelden</a>
       <a href="https://discord.gg/Ywbw7eDfdg" target="_blank" rel="noopener" class="discord-link">Discord</a>
     </nav>
@@ -236,7 +236,7 @@
     <div class="card" id="voice">
       <h2>Voice-Chat</h2>
       <p>Unser eigener Sprachchat für die Community. Anmeldung mit deinem Minecraft-Namen.</p>
-      <a class="btn secondary" href="#">Zum Voice-Chat</a>
+      <a class="btn secondary" href="https://ts-brotsmp.duckdns.org" onclick="openVoice(event)">Zum Voice-Chat</a>
     </div>
   </main>
 
@@ -267,6 +267,18 @@
   </footer>
 
   <script>
+    function openVoice(event) {
+        event.preventDefault();
+        const token = localStorage.getItem('token') || localStorage.getItem('jwt');
+        
+        let targetUrl = 'https://ts-brotsmp.duckdns.org';
+        if (token) {
+            targetUrl += `?token=${encodeURIComponent(token)}`;
+        }
+        
+        window.location.href = targetUrl;
+    }
+
     function copyIp(ip, btn) {
       navigator.clipboard.writeText(ip).then(() => {
         const old = btn.textContent;
@@ -275,10 +287,5 @@
       });
     }
   </script>
-  <script>
-    // Wartungsmodus: Status ist fest auf "Wartungsarbeiten" gesetzt.
-    // Für die Live-Abfrage (Online/Offline + MOTD) wieder auf die API-Version umstellen.
-  </script>
 </body>
-
 </html>
