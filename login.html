@@ -111,15 +111,24 @@
     }
     .field input:focus + label,
     .field input:not(:placeholder-shown) + label,
-    .row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-    }
+    .field input:-webkit-autofill + label,
     .field.date label {
       top: 4px;
       font-size: 0.72rem;
       color: var(--gold);
+    }
+    .field input:-webkit-autofill,
+    .field input:-webkit-autofill:hover,
+    .field input:-webkit-autofill:focus {
+      -webkit-text-fill-color: var(--text);
+      -webkit-box-shadow: 0 0 0 1000px #0f0f13 inset;
+      transition: background-color 9999s ease-out 0s;
+      caret-color: var(--text);
+    }
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
     }
     .field.date input { color-scheme: dark; }
     .hint {
