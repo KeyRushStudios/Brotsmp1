@@ -1,0 +1,314 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Anmelden – BrotSMP</title>
+  <style>
+    :root {
+      --gold: #f5a623;
+      --gold-dark: #b86e00;
+      --bg: #0b0b0d;
+      --card: #16161a;
+      --line: #34343c;
+      --text: #f2f2f2;
+      --muted: #9a9aa3;
+      --error: #ff6b6b;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      background: radial-gradient(circle at top, #1d1a14 0%, var(--bg) 60%);
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .card {
+      width: 100%;
+      max-width: 420px;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-top: 3px solid var(--gold);
+      border-radius: 16px;
+      padding: 40px 36px 32px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    }
+    .logo {
+      display: block;
+      width: 84px;
+      height: 84px;
+      margin: 0 auto 12px;
+      border-radius: 50%;
+      filter: drop-shadow(0 0 14px rgba(245,166,35,0.35));
+    }
+    h1 {
+      font-size: 1.6rem;
+      font-weight: 600;
+      text-align: center;
+      margin: 8px 0 4px;
+    }
+    .sub {
+      text-align: center;
+      color: var(--muted);
+      margin: 0 0 28px;
+      font-size: 0.95rem;
+    }
+    .tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      background: #101014;
+      border-radius: 10px;
+      padding: 4px;
+      margin-bottom: 24px;
+    }
+    .tabs button {
+      background: transparent;
+      border: none;
+      color: var(--muted);
+      padding: 10px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 0.95rem;
+    }
+    .tabs button.active {
+      background: var(--gold);
+      color: #000;
+    }
+    form { display: none; }
+    form.active { display: block; }
+    .field {
+      position: relative;
+      margin-bottom: 18px;
+    }
+    .field input {
+      width: 100%;
+      padding: 16px 14px 8px;
+      background: #0f0f13;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      color: var(--text);
+      font-size: 1rem;
+      outline: none;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .field input:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(245,166,35,0.2);
+    }
+    .field label {
+      position: absolute;
+      left: 14px;
+      top: 14px;
+      color: var(--muted);
+      font-size: 1rem;
+      pointer-events: none;
+      transition: all .15s ease;
+    }
+    .field input:focus + label,
+    .field input:not(:placeholder-shown) + label,
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .field.date label {
+      top: 4px;
+      font-size: 0.72rem;
+      color: var(--gold);
+    }
+    .field.date input { color-scheme: dark; }
+    .hint {
+      color: var(--muted);
+      font-size: 0.8rem;
+      margin: -10px 0 18px 2px;
+    }
+    .check {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      color: var(--muted);
+      font-size: 0.85rem;
+      margin-bottom: 18px;
+    }
+    .check input { margin-top: 3px; accent-color: var(--gold); }
+    .check a { color: var(--gold); }
+    .btn {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 10px;
+      background: linear-gradient(180deg, var(--gold), var(--gold-dark));
+      color: #000;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: transform .05s ease, filter .2s;
+    }
+    .btn:hover { filter: brightness(1.08); }
+    .btn:active { transform: scale(0.99); }
+    .btn:disabled { opacity: .6; cursor: not-allowed; }
+    .msg {
+      min-height: 22px;
+      margin-top: 14px;
+      text-align: center;
+      font-size: 0.9rem;
+    }
+    .msg.error { color: var(--error); }
+    .msg.ok { color: #22c55e; }
+    .back {
+      display: block;
+      text-align: center;
+      margin-top: 22px;
+      color: var(--muted);
+      font-size: 0.85rem;
+      text-decoration: none;
+    }
+    .back:hover { color: var(--gold); }
+  </style>
+</head>
+<body>
+
+  <main class="card">
+    <img class="logo" src="logo.png" alt="BrotSMP">
+    <h1 id="title">Willkommen zurück</h1>
+    <p class="sub" id="subtitle">Melde dich mit deinem Minecraft-Namen an</p>
+
+    <div class="tabs">
+      <button id="tab-login" class="active" onclick="showTab('login')">Anmelden</button>
+      <button id="tab-register" onclick="showTab('register')">Registrieren</button>
+    </div>
+
+    <!-- Anmelden -->
+    <form id="form-login" class="active" onsubmit="login(event)">
+      <div class="field">
+        <input id="login-name" type="text" placeholder=" " autocomplete="username" required>
+        <label for="login-name">Minecraft-Name</label>
+      </div>
+      <div class="field">
+        <input id="login-pw" type="password" placeholder=" " autocomplete="current-password" required>
+        <label for="login-pw">Passwort</label>
+      </div>
+      <button class="btn" type="submit">Anmelden</button>
+    </form>
+
+    <!-- Registrieren -->
+    <form id="form-register" onsubmit="register(event)">
+      <div class="row">
+        <div class="field">
+          <input id="reg-first" type="text" placeholder=" " autocomplete="given-name" required>
+          <label for="reg-first">Vorname *</label>
+        </div>
+        <div class="field">
+          <input id="reg-last" type="text" placeholder=" " autocomplete="family-name">
+          <label for="reg-last">Nachname</label>
+        </div>
+      </div>
+      <div class="hint">Vorname ist Pflicht, Nachname optional. Bitte deinen echten Namen angeben.</div>
+
+      <div class="field">
+        <input id="reg-name" type="text" placeholder=" " autocomplete="username" pattern="[A-Za-z0-9_]{3,16}" required>
+        <label for="reg-name">Minecraft-Name *</label>
+      </div>
+      <div class="hint">3–16 Zeichen: Buchstaben, Zahlen, Unterstrich</div>
+
+      <div class="field date">
+        <input id="reg-birth" type="date" placeholder=" " required>
+        <label for="reg-birth">Geburtsdatum</label>
+      </div>
+
+      <div class="field">
+        <input id="reg-pw" type="password" placeholder=" " autocomplete="new-password" minlength="8" required>
+        <label for="reg-pw">Passwort</label>
+      </div>
+      <div class="hint">Mindestens 8 Zeichen</div>
+
+      <label class="check">
+        <input id="reg-terms" type="checkbox" required>
+        <span>Ich habe die <a href="#">Datenschutzerklärung</a> und die <a href="#">Regeln</a> gelesen.</span>
+      </label>
+
+      <button class="btn" type="submit">Konto erstellen</button>
+    </form>
+
+    <p class="msg" id="msg"></p>
+    <a class="back" href="index.html">← Zurück zur Startseite</a>
+  </main>
+
+  <script>
+    // Hier die Adresse des Backends eintragen, sobald der Server läuft.
+    const API_URL = '';
+
+    const msg = document.getElementById('msg');
+
+    function showTab(tab) {
+      const isLogin = tab === 'login';
+      document.getElementById('form-login').classList.toggle('active', isLogin);
+      document.getElementById('form-register').classList.toggle('active', !isLogin);
+      document.getElementById('tab-login').classList.toggle('active', isLogin);
+      document.getElementById('tab-register').classList.toggle('active', !isLogin);
+      document.getElementById('title').textContent = isLogin ? 'Willkommen zurück' : 'Konto erstellen';
+      document.getElementById('subtitle').textContent = isLogin
+        ? 'Melde dich mit deinem Minecraft-Namen an'
+        : 'Erstelle dein BrotSMP-Konto';
+      msg.textContent = '';
+      msg.className = 'msg';
+    }
+
+    function show(text, ok = false) {
+      msg.textContent = text;
+      msg.className = 'msg ' + (ok ? 'ok' : 'error');
+    }
+
+    async function post(path, body) {
+      if (!API_URL) throw new Error('Backend noch nicht verbunden');
+      const res = await fetch(API_URL + path, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || 'Fehler');
+      return data;
+    }
+
+    async function login(e) {
+      e.preventDefault();
+      try {
+        const data = await post('/api/login', {
+          mcName: document.getElementById('login-name').value,
+          password: document.getElementById('login-pw').value,
+        });
+        localStorage.setItem('brotsmp_token', data.token);
+        show('Erfolgreich angemeldet', true);
+      } catch (err) {
+        show(err.message);
+      }
+    }
+
+    async function register(e) {
+      e.preventDefault();
+      const birth = document.getElementById('reg-birth').value;
+      const age = (Date.now() - new Date(birth)) / (365.25 * 24 * 3600 * 1000);
+      if (age < 13) return show('Mindestalter 13 Jahre');
+      try {
+        await post('/api/register', {
+          firstName: document.getElementById('reg-first').value.trim(),
+          lastName: document.getElementById('reg-last').value.trim() || null,
+          mcName: document.getElementById('reg-name').value,
+          birthDate: birth,
+          password: document.getElementById('reg-pw').value,
+        });
+        show('Konto erstellt. Du kannst dich jetzt anmelden.', true);
+        showTab('login');
+      } catch (err) {
+        show(err.message);
+      }
+    }
+  </script>
+</body>
+</html>
