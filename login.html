@@ -291,11 +291,7 @@
           password: document.getElementById('login-pw').value,
         });
         localStorage.setItem('brotsmp_token', data.token);
-        show('Erfolgreich angemeldet! Leite weiter...', true);
-        
-        setTimeout(() => {
-          window.location.href = `https://ts-brotsmp.duckdns.org?token=${encodeURIComponent(data.token)}`;
-        }, 800);
+        show('Erfolgreich angemeldet', true);
       } catch (err) {
         show(err.message);
       }
