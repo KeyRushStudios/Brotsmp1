@@ -249,9 +249,7 @@
   </main>
 
   <script>
-    // Hier die Adresse des Backends eintragen, sobald der Server läuft.
     const API_URL = 'https://brotsmp-api.onrender.com';
-
     const msg = document.getElementById('msg');
 
     function showTab(tab) {
@@ -293,7 +291,11 @@
           password: document.getElementById('login-pw').value,
         });
         localStorage.setItem('brotsmp_token', data.token);
-        show('Erfolgreich angemeldet', true);
+        show('Erfolgreich angemeldet! Leite weiter...', true);
+        
+        setTimeout(() => {
+          window.location.href = `https://ts-brotsmp.duckdns.org?token=${encodeURIComponent(data.token)}`;
+        }, 800);
       } catch (err) {
         show(err.message);
       }
