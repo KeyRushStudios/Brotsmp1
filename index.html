@@ -148,7 +148,7 @@
       background: #6b6b75;
     }
     .badge.online { background: #22c55e; color: #000; }
-    .badge.offline { background: #ef4444; }
+    .badge.maintenance { background: #7a0c0c; color: #fff; }
     .motd {
       color: var(--muted);
       margin: 8px 0 0;
@@ -240,19 +240,17 @@
 
   <section class="status-section">
     <h2>Serverstatus</h2>
-    <div class="status-card" id="status-java">
+    <div class="status-card">
       <div class="status-head">
         <strong>Java</strong>
-        <span class="badge">Lade…</span>
+        <span class="badge maintenance">Wartungsarbeiten</span>
       </div>
-      <p class="motd">–</p>
     </div>
-    <div class="status-card" id="status-bedrock">
+    <div class="status-card">
       <div class="status-head">
         <strong>Bedrock</strong>
-        <span class="badge">Lade…</span>
+        <span class="badge maintenance">Wartungsarbeiten</span>
       </div>
-      <p class="motd">–</p>
     </div>
   </section>
 
@@ -276,32 +274,8 @@
     }
   </script>
   <script>
-    async function loadStatus(edition, address, cardId) {
-      const card = document.getElementById(cardId);
-      const badge = card.querySelector('.badge');
-      const motdEl = card.querySelector('.motd');
-      const path = edition === 'bedrock' ? 'bedrock/3' : '3';
-      try {
-        const res = await fetch(`https://api.mcsrvstat.us/${path}/${address}`);
-        const data = await res.json();
-        if (data.online) {
-          badge.textContent = 'Online';
-          badge.className = 'badge online';
-          const lines = (data.motd && data.motd.clean) || [];
-          motdEl.textContent = lines.join('\n') || 'Keine MOTD verfügbar';
-        } else {
-          badge.textContent = 'Offline';
-          badge.className = 'badge offline';
-          motdEl.textContent = '–';
-        }
-      } catch {
-        badge.textContent = 'Offline';
-        badge.className = 'badge offline';
-        motdEl.textContent = 'Status konnte nicht geladen werden';
-      }
-    }
-    loadStatus('java', 'brotsmp1.minekeep.gg', 'status-java');
-    loadStatus('bedrock', 'brotsmp1.bedrock.minekeep.gg', 'status-bedrock');
+    // Wartungsmodus: Status ist fest auf "Wartungsarbeiten" gesetzt.
+    // Für die Live-Abfrage (Online/Offline + MOTD) wieder auf die API-Version umstellen.
   </script>
 </body>
 
